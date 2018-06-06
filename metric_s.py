@@ -20,9 +20,9 @@ def s1(df):
     print(s1_fm)
 
     df2 = df[df[LABEL1] == 1]  # 只留下对的。
-    print("df2   ",df2.head(100))
+    # print("df2   ",df2.head(100))
     s1_fz=df2['w'].sum();
-    print(s1_fz)
+    # print(s1_fz)
 
     s1_score=s1_fz/s1_fm
     print ("s1_score   ",s1_score)
@@ -39,7 +39,7 @@ def s2(df):
 
     s2_fm=df2[LABEL1].count();
     # s2_fm=count
-    print(s2_fm)
+    # print(s2_fm)
 
     s2_fz=df2['d2'].sum()
 

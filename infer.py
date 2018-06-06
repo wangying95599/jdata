@@ -44,6 +44,7 @@ def to_train(is_submit=False):
     drop_features=["a_date","label_1","label_2"]
 
     #S1
+    print("beging s1")
     print(train.head())
     print(valid.head())
     print(test.head())
