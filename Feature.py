@@ -80,39 +80,40 @@ class Feature(object):
 		# plot_his(sample['age'])
 		# plot_his(sample['sex'])
 
-		self.df_Order_Comment_User_Sku = jdata.df_user_order. \
-			merge(jdata.df_user_comment, on=['user_id', 'o_id'], how='left'). \
-			merge(jdata.df_user_info, on='user_id', how='left'). \
-			merge(jdata.df_sku_info, on='sku_id', how='left')
-		# Action User Sku
-		self.df_Action_User_Sku = jdata.df_user_action. \
-			merge(jdata.df_user_info, on='user_id', how='left'). \
-			merge(jdata.df_sku_info, on='sku_id', how='left')
-		a_date = pd.DataFrame({"a_date": train_date})
-
-		features_temp_Action_ = self.df_Action_User_Sku.merge(a_date, on="a_date", how="inner")
-		# 用户浏览特征
-		# sku_id cate 30 101 浏览数
-		features_temp_ = features_temp_Action_[(features_temp_Action_['cate']==30) | (features_temp_Action_['cate']==101)].\
-											groupby(['user_id'])['sku_id'].\
-											nunique().\
-											reset_index().\
-											rename(columns={'user_id':'user_id','sku_id-1':'sku_id_cate_30_101_cnt'})
-		#TODO?
-		print(features_temp_.columns)
-		sample = sample.merge(features_temp_,on=['user_id'],how='left')
-
-		# a_date cate 30 101 天数
-		features_temp_ = features_temp_Action_[(features_temp_Action_['cate']==30) | (features_temp_Action_['cate']==101)].\
-											groupby(['user_id'])['a_date'].\
-											nunique().\
-											reset_index().\
-											rename(columns={'user_id':'user_id','a_date-2':'a_date_cate_30_101_nuique'})
-		sample = sample.merge(features_temp_,on=['user_id'],how='left')
+		# self.df_Order_Comment_User_Sku = jdata.df_user_order. \
+		# 	merge(jdata.df_user_comment, on=['user_id', 'o_id'], how='left'). \
+		# 	merge(jdata.df_user_info, on='user_id', how='left'). \
+		# 	merge(jdata.df_sku_info, on='sku_id', how='left')
+		# # Action User Sku
+		# self.df_Action_User_Sku = jdata.df_user_action. \
+		# 	merge(jdata.df_user_info, on='user_id', how='left'). \
+		# 	merge(jdata.df_sku_info, on='sku_id', how='left')
+		# a_date = pd.DataFrame({"a_date": train_date})
+        #
+		# features_temp_Action_ = self.df_Action_User_Sku.merge(a_date, on="a_date", how="inner")
+		# # 用户浏览特征
+		# # sku_id cate 30 101 浏览数
+		# features_temp_ = features_temp_Action_[(features_temp_Action_['cate']==30) | (features_temp_Action_['cate']==101)].\
+		# 									groupby(['user_id'])['sku_id'].\
+		# 									nunique().\
+		# 									reset_index().\
+		# 									rename(columns={'user_id':'user_id','sku_id-1':'sku_id_cate_30_101_cnt'})
+		# #TODO?
+		# print(sample)
+		# sample = sample.merge(features_temp_,on=['user_id'],how='left')
+        #
+		# # a_date cate 30 101 天数
+		# features_temp_ = features_temp_Action_[(features_temp_Action_['cate']==30) | (features_temp_Action_['cate']==101)].\
+		# 									groupby(['user_id'])['a_date'].\
+		# 									nunique().\
+		# 									reset_index().\
+		# 									rename(columns={'user_id':'user_id','a_date-2':'a_date_cate_30_101_nuique'})
+		# sample = sample.merge(features_temp_,on=['user_id'],how='left')
 
 		# 构造特征
 		# sample = feat_mean(sample, sample, ["age"], "sex")
 		sample['age_sex']=(sample['sex']+2)*(sample['age']+20)
+		sample['age_sex']/=(sample['age_sex'].max()-sample['age_sex'].min())
 
 		sample = feat_count(sample, sample, ["user_id"], "a_date")
 		sample = feat_sum(sample, sample, ["user_id"], "a_num")
